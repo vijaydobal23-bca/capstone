@@ -15,25 +15,22 @@ export const createService = async (sandboxId) => {
         app: "sandbox",
         sandboxId: sandboxId,
       },
+      ports: [
+        {
+          protocol: "TCP",
+          port: 80,
+          targetPort: 5173,
+        },
+      ],
+      type: "ClusterIP",
     },
-
-    ports: [
-      {
-        protocol: "TCP",
-        port: 80,
-        targetPort: 5173,
-      },
-    ],
-
-    type: "ClusterIP",
   };
+
+  const response = await k8sCoreV1Api.createNamespacedService({
+    namespace: "default",
+    body: serviceManifeast,
+  });
+
+  console.log("Service created successfully", response.body.metadata.name);
+  return response;
 };
-
-const response = await k8sCoreV1Api.createNamespacedService({
-  namespace:"default",
-  body:serviceManifeast
-})
-
-console.log("Service created successfully", response.body.metadata.name);
-
-export default response

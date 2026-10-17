@@ -27,6 +27,7 @@ app.post("/api/sandbox/start", async (req, res) => {
       sandboxId,
       previewUrl: `http://sandbox-${sandboxId}.preview.localhost`
     })
+    
   } catch (error) {
     console.error("Error starting sandbox:", error);
     return res.status(500).json({

@@ -20,8 +20,8 @@ spec:
       serviceAccountName : resource-manager
       containers:
       - name: main-sandbox-container
-        image: sandbox:latest
-        imagePullPolicy: IfNotPresent
+        image: sandbox:v2
+        imagePullPolicy: Never
 
         ports:
         - name: main-sandbox
