@@ -20,7 +20,7 @@ spec:
       serviceAccountName : resource-manager
       containers:
       - name: main-sandbox-container
-        image: sandbox:v2
+        image: sandbox:latest
         imagePullPolicy: Never
 
         ports:

@@ -5,7 +5,8 @@ import morgan from "morgan";
 
 const app = express();
 
-const proxies = [];
+const proxies = {};
+const agentProxy = {};
 
 function getProxy(sandboxId) {
   if (!proxies[sandboxId]) {
@@ -17,6 +18,18 @@ function getProxy(sandboxId) {
   }
 
   return proxies[sandboxId];
+}
+
+function getAgentProxy(sandboxId) {
+    if(!agentProxy[sandboxId]) {
+        agentProxy[sandboxId] = createProxyMiddleware({
+            target: `http://agent-service-${sandboxId}:3000`,
+            changeOrigin: true,
+            ws: true,
+        });
+    }
+
+    return proxies["agent-" + sandboxId];
 }
 
 app.get("/api/status/healthz", (req, res) => {
@@ -35,6 +48,12 @@ app.use((req, res, next) => {
   }
 
   const sandboxId = host.split(".")[0];
+
+  if (host.split(".")[1] === "agent") {
+    return getProxy("agent-" + sandboxId)(req, res, next);
+  } else if (host.split(".")[1] === "preview") {
+    return getProxy("preview-" + sandboxId)(req, res, next);
+  }
 
   return getProxy(sandboxId)(req, res, next);
 });
